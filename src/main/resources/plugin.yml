@@ -1,4 +1,16 @@
 name: shutdown_optimizer
-version: '${version}'
+version: '1.0' #'${version}'
 main: org.nikitonz.shutdown_optimizer.Shutdown_optimizer
 api-version: 1.19
+
+
+
+commands:
+  shutdown:
+    description: Shutdown the server.
+    usage: /shutdown <value>
+    permission: shutdown_optimizer.shutdown
+  makeyourtime:
+    description: Set the shutdown timer value.
+    usage: /makeyourtime <value>
+    permission: shutdown_optimizer.makeyourtime
