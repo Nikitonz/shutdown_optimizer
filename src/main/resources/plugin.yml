@@ -1,0 +1,4 @@
+name: shutdown_optimizer
+version: '${version}'
+main: org.nikitonz.shutdown_optimizer.Shutdown_optimizer
+api-version: 1.19
