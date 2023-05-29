@@ -19,7 +19,7 @@ import java.io.IOException;
 
 public final class Shutdown_optimizer extends JavaPlugin implements Listener, CommandExecutor {
     private int countdownTask;
-    private int playerCount;
+    private int playerCount = 0;
     private int shutdownTime;
     private FileConfiguration config;
     private File configFile;
@@ -79,15 +79,13 @@ public final class Shutdown_optimizer extends JavaPlugin implements Listener, Co
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        playerCount = Bukkit.getServer().getOnlinePlayers().size();
-        if (playerCount > 0) {
-            resetCountdown();
-        }
+        playerCount++;
+        resetCountdown();
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        playerCount = Bukkit.getServer().getOnlinePlayers().size() - 1;
+        playerCount--;
         if (playerCount == 0) {
             startCountdown();
         }
@@ -96,10 +94,12 @@ public final class Shutdown_optimizer extends JavaPlugin implements Listener, Co
     private void startCountdown() {
         cancelCountdown();
         countdownTask = Bukkit.getScheduler().scheduleSyncDelayedTask(this, () -> {
-            Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "save-all");
-            Bukkit.getScheduler().runTaskLater(this, () -> {
-                Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "stop");
-            }, 10 * 20);
+            if (playerCount == 0) {
+                Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "save-all");
+                Bukkit.getScheduler().runTaskLater(this, () -> {
+                    Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "stop");
+                }, 10 * 20);
+            }
         }, shutdownTime * 60 * 20);
     }
 
